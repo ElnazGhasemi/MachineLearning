@@ -9,7 +9,7 @@ def get_database_connection():
     return psycopg2.connect(
         dbname="vector_db",
         user="postgres",
-        password="1qaz",
+        password="****",
         host="localhost"
     )
 
