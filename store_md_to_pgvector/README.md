@@ -51,7 +51,7 @@ The script will:
 The database connection is configured in `store_markdown.py` with these default settings:
 - Database: vector_db
 - User: postgres
-- Password: 1qaz
+- Password: ****
 - Host: localhost
 
 ## Technical Details
