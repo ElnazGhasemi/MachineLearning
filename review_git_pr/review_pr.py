@@ -137,10 +137,9 @@ def main(owner: str, repo: str, pr_number: int):
     
     print(review)
     
-    # Post overall assessment as a PR comment
-    overall_assessment = extract_overall_assessment(review)
-    if overall_assessment:
-        comment = "## Code Review - Overall Assessment\n\n" + overall_assessment
+    # Post full review as a PR comment
+    if review:
+        comment = "## Code Review\n\n" + review
         post_pr_comment(owner, repo, pr_number, comment)
 
 if __name__ == "__main__":
