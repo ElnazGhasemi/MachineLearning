@@ -23,10 +23,12 @@ class Configuration:
     )
 
     model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
-        default="anthropic/claude-3-5-sonnet-20240620",
+        # default="anthropic/claude-3-5-sonnet-20240620",
+        default="openai/o1",
         metadata={
             "description": "The name of the language model to use for the agent's main interactions. "
-            "Should be in the form: provider/model-name."
+            "Should be in the form: provider/model-name.",
+            "base_url": "https://litellm.deriv.ai/v1"
         },
     )
 
