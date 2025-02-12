@@ -15,6 +15,7 @@ from typing_extensions import Annotated
 
 from react_agent.configuration import Configuration
 
+import subprocess
 
 async def search(
     query: str, *, config: Annotated[RunnableConfig, InjectedToolArg]
@@ -30,5 +31,32 @@ async def search(
     result = await wrapped.ainvoke({"query": query})
     return cast(list[dict[str, Any]], result)
 
+def get_current_time(*args, **kwargs):
+    """Returns the current time in H:MM AM/PM format."""
+    import datetime  # Import datetime module to get current time
 
-TOOLS: List[Callable[..., Any]] = [search]
+    now = datetime.datetime.now()  # Get current time
+    return now.strftime("%I:%M %p")  # Format time in H:MM AM/PM format
+
+
+MAX_COMMAND_OUTPUT_LENGTH = 16000  # Maximum length for command output
+MAX_CODEBASE_LENGTH = 64000  # Maximum length for combined file contents
+
+def run_command(command: str, timeout: int = 60) -> str:
+    """Execute a command with a timeout"""
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=timeout)
+        output = result.stdout if result.stdout else result.stderr if result.stderr else ""
+        
+        # Handle truncation if needed
+        if len(output) > MAX_COMMAND_OUTPUT_LENGTH:
+            truncated_output = output[:MAX_COMMAND_OUTPUT_LENGTH]
+            return f"[TRUNCATED OUTPUT - Original length: {len(output)} chars]\n{truncated_output}\n[End of truncated output]"
+        
+        return output
+    except subprocess.TimeoutExpired:
+        return f"Command timed out after {timeout} seconds"
+    except Exception as e:
+        return f"Error executing command: {str(e)}"
+
+TOOLS: List[Callable[..., Any]] = [search, get_current_time, run_command]
