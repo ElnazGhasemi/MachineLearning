@@ -3,6 +3,7 @@
 Works with a chat model with tool calling support.
 """
 
+from dataclasses import fields
 from datetime import datetime, timezone
 from typing import Dict, List, Literal, cast
 
@@ -36,7 +37,15 @@ async def call_model(
     configuration = Configuration.from_runnable_config(config)
 
     # Initialize the model with tool binding. Change the model or add more tools here.
-    model = load_chat_model(configuration.model).bind_tools(TOOLS)
+    # Get base_url from model metadata
+    model_field = next(f for f in fields(Configuration) if f.name == "model")
+    base_url = model_field.metadata.get("base_url")
+    
+    # Initialize the model with tool binding
+    model = load_chat_model(
+        configuration.model,
+        base_url=base_url
+    ).bind_tools(TOOLS)
 
     # Format the system prompt. Customize this to change the agent's behavior.
     system_message = configuration.system_prompt.format(
