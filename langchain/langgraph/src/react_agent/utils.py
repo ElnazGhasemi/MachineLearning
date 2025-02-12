@@ -17,11 +17,12 @@ def get_message_text(msg: BaseMessage) -> str:
         return "".join(txts).strip()
 
 
-def load_chat_model(fully_specified_name: str) -> BaseChatModel:
+def load_chat_model(fully_specified_name: str, base_url: str = None) -> BaseChatModel:
     """Load a chat model from a fully specified name.
 
     Args:
         fully_specified_name (str): String in the format 'provider/model'.
+        base_url (str, optional): Base URL for the model API endpoint.
     """
     provider, model = fully_specified_name.split("/", maxsplit=1)
-    return init_chat_model(model, model_provider=provider)
+    return init_chat_model(model, model_provider=provider, base_url=base_url)
