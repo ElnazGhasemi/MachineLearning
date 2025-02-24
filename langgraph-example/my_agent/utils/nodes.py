@@ -96,11 +96,9 @@ Provide your response in the following format:
 Write your complete answer. Do not include any explanation or commentary outside of these tags.
 """
 
-from langchain_core.messages import BaseMessage
+
 # Define the function that calls the model
 def call_model(state, config):
-    # details_message = [{"owner":state["owner"]} , {"repo": state["repo"]}, {"pr_number":state["pr_number"]}]
-    # state["messages"].append(BaseMessage(content=details_message))
     messages = state["messages"]
     messages = [{"role": "system", "content": system_prompt}] + messages
     model_name = config.get('configurable', {}).get("model_name", "openai")
